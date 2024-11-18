@@ -23,7 +23,8 @@
     ],
     "info": {
         "title": "expert-system",
-        "version": "1.0.0"
+        "version": "1.0.0",
+        "description": "API pour la recherche de sujets dans le systéme expert"
     },
     "openapi": "3.0.3",
 
@@ -58,6 +59,47 @@
                 }
             }
             
+        },
+        "/search":{
+            "get":{
+                "summary": "Recherche de sujets",
+                "description":"Permet de rechercher un sujet par mot-clé.",
+                "parameters": [
+                    {
+                        "name": "query",
+                        "in": "query",
+                        "description": "Mot-clé à rechercher",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200":{
+                        "description": "Liste des résultats de recherche.",
+                        "content": {
+                            "application/json":{
+                                "example": {
+                                    "results": [
+                                        {
+                                            "title": "voiture",
+                                            "description": "liste de voiture",
+                                            "url": "https://www.autokoo.com/marque"
+                                        },
+                                        {
+                                            "title": "Téléphone",
+                                            "description": "liste des films",
+                                            "url": "https://www.lacinetek.com/fr"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+                
+            }
         }
     }
 
