@@ -86,11 +86,6 @@
                                             "title": "voiture",
                                             "description": "liste de voiture",
                                             "url": "https://www.autokoo.com/marque"
-                                        },
-                                        {
-                                            "title": "Téléphone",
-                                            "description": "liste des films",
-                                            "url": "https://www.lacinetek.com/fr"
                                         }
                                     ]
                                 }
