@@ -1,5 +1,26 @@
 {   
-    
+    "servers": [
+        {
+            "url": "{protocol}://{host}:{port}",
+            "variables": {
+                "protocol":{
+                    "enum": [
+                        "http",
+                        "https"
+                    ],
+                    "default": "http"
+                },
+                "host":{
+                    "default": "13.36.102.183",
+                    "description": "adresse ip ou nom de domaine"
+                },
+                "port":{
+                    "default": "8080",
+                    "description": "port de communication"
+                }
+            }
+        }
+    ],
     "info": {
         "title": "expert-system",
         "version": "1.0.0"
