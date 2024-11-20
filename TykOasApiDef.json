@@ -85,7 +85,7 @@
               }
             }
           },
-          "400": {
+          "404": {
             "description": "Paramètre de recherche manquant ou invalide.",
             "content": {
               "application/json": {
