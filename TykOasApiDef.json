@@ -1,102 +1,102 @@
-{   
-    "servers": [
-        {
-            "url": "{protocol}://{host}:{port}",
-            "variables": {
-                "protocol":{
-                    "enum": [
-                        "http",
-                        "https"
-                    ],
-                    "default": "http"
-                },
-                "host":{
-                    "default": "13.36.102.183",
-                    "description": "adresse ip ou nom de domaine"
-                },
-                "port":{
-                    "default": "8080",
-                    "description": "port de communication"
-                }
-            }
-        }
-    ],
-    "info": {
-        "title": "expert-system",
-        "version": "1.0.0",
-        "description": "API pour la recherche de sujets dans le systéme expert"
-    },
-    "openapi": "3.0.3",
-
-    "x-tyk-api-gateway": {
-        "info": {
-            "name": "expertSystem",
-             "state": {
-                "active": true
-             }
-             
+{
+  "servers": [
+    {
+      "url": "{protocol}://{host}:{port}",
+      "variables": {
+        "protocol": {
+          "enum": ["http", "https"],
+          "default": "http"
         },
-        "upstream": {
-            "url": "http://httpbin.org"
+        "host": {
+          "default": "13.36.102.183",
+          "description": "adresse ip ou nom de domaine"
         },
-        "server": {
-            "listenPath": {
-                "value": "/ms2d5",
-                "strip": true
-            }
-      
+        "port": {
+          "default": "8080",
+          "description": "port de communication"
         }
-    
-    },
-    "paths": {
-        "/":{
-            "get":{
-                "description": "test of tyk architecture",
-                "responses": {
-                    "200":{
-                        "description": "test OK"
-                    }
-                }
-            }
-            
-        },
-        "/search":{
-            "get":{
-                "summary": "Recherche de sujets",
-                "description":"Permet de rechercher un sujet par mot-clé.",
-                "parameters": [
-                    {
-                        "name": "query",
-                        "in": "query",
-                        "description": "Mot-clé à rechercher",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200":{
-                        "description": "Liste des résultats de recherche.",
-                        "content": {
-                            "application/json":{
-                                "example": {
-                                    "results": [
-                                        {
-                                            "title": "voiture",
-                                            "description": "liste de voiture",
-                                            "url": "https://www.autokoo.com/marque"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    }
-                }
-                
-            }
-        }
+      }
     }
+  ],
+  "info": {
+    "title": "expert-system",
+    "version": "1.0.0",
+    "description": "API pour la recherche de sujets dans le systéme expert"
+  },
+  "openapi": "3.0.3",
 
-    
+  "x-tyk-api-gateway": {
+    "info": {
+      "name": "expertSystem",
+      "state": {
+        "active": true
+      }
+    },
+    "upstream": {
+      "url": "http://httpbin.org"
+    },
+    "server": {
+      "listenPath": {
+        "value": "/ms2d5",
+        "strip": true
+      }
+    }
+  },
+  "paths": {
+    "/": {
+      "get": {
+        "description": "test of tyk architecture",
+        "responses": {
+          "200": {
+            "description": "test OK"
+          }
+        }
+      }
+    },
+    "/search": {
+      "get": {
+        "summary": "Recherche de sujets",
+        "description": "Permet de rechercher un sujet par mot-clé.",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "Mot-clé à rechercher",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liste des résultats de recherche.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "results": [
+                    {
+                      "title": "voiture",
+                      "description": "liste de voiture",
+                      "url": "https://www.autokoo.com/marque"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Paramètre de recherche manquant ou invalide.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "Le paramètre 'query' est requis et doit être valide."
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 }
