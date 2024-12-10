@@ -3,7 +3,7 @@
 **Commande pour lancer Tyk Gateway avec docker:**
 
 ```bash
-docker run -it -d --name -p 8080:8080 tyk-gateway evrad7/ms2d5-tyk
+docker run -it -d --name  tyk-gateway -p 8080:8080 evrad7/ms2d5-tyk
 ```
 
 **Vérification du succès de l’installation :**
