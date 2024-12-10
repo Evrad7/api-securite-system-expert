@@ -1,102 +1,135 @@
-{
-  "servers": [
-    {
-      "url": "{protocol}://{host}:{port}",
-      "variables": {
-        "protocol": {
-          "enum": ["http", "https"],
-          "default": "http"
-        },
-        "host": {
-          "default": "13.36.102.183",
-          "description": "adresse ip ou nom de domaine"
-        },
-        "port": {
-          "default": "8080",
-          "description": "port de communication"
-        }
-      }
-    }
-  ],
-  "info": {
-    "title": "expert-system",
-    "version": "1.0.0",
-    "description": "API pour la recherche de sujets dans le systéme expert"
-  },
-  "openapi": "3.0.3",
+{   
 
-  "x-tyk-api-gateway": {
+    "servers": [
+        {
+            "url": "{protocol}://{host}:{port}",
+            "variables": {
+                "protocol":{
+                    "enum": [
+                        "http",
+                        "https"
+                    ],
+                    "default": "http"
+                },
+                "host":{
+                    "default": "13.36.102.183",
+                    "description": "adresse ip ou nom de domaine"
+                },
+                "port":{
+                    "default": "8080",
+                    "description": "port de communication"
+                }
+            }
+        }
+    ],
     "info": {
-      "name": "expertSystem",
-      "state": {
-        "active": true
-      }
+        "title": "expert-system",
+        "version": "1.0.0"
     },
-    "upstream": {
-      "url": "http://httpbin.org"
-    },
-    "server": {
-      "listenPath": {
-        "value": "/ms2d5",
-        "strip": true
-      }
-    }
-  },
-  "paths": {
-    "/": {
-      "get": {
-        "description": "test of tyk architecture",
-        "responses": {
-          "200": {
-            "description": "test OK"
-          }
-        }
-      }
-    },
-    "/search": {
-      "get": {
-        "summary": "Recherche de sujets",
-        "description": "Permet de rechercher un sujet par mot-clé.",
-        "parameters": [
-          {
-            "name": "query",
-            "in": "query",
-            "description": "Mot-clé à rechercher",
-            "required": true,
-            "schema": {
-              "type": "string"
+    "openapi": "3.0.3",
+
+    "x-tyk-api-gateway": {
+       "middleware": {
+        "operations": {
+            "home-page":{
+                "mockResponse":{
+                    "enabled":true,
+                    "fromOASExamples": {
+                        "enabled": true,
+                        "exampleName":"default-example"
+                      }
+                }
+            },
+            "search":{
+                "mockResponse":{
+                    "enabled":true,
+                    "fromOASExamples": {
+                        "enabled": true
+                      }
+                }
             }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Liste des résultats de recherche.",
-            "content": {
-              "application/json": {
-                "example": {
-                  "results": [
-                    {
-                      "title": "voiture",
-                      "description": "liste de voiture",
-                      "url": "https://www.autokoo.com/marque"
+        }
+       },
+        "info": {
+            "name": "expertSystem",
+             "state": {
+                "active": true
+             }
+             
+        },
+        "upstream": {
+            "url": "http://httpbin.org"
+        },
+        "server": {
+            "listenPath": {
+                "value": "/ms2d5",
+                "strip": true
+            }
+      
+        }
+      
+    
+    },
+    "paths": {
+        "/":{
+            "get":{
+                "operationId": "home-page",
+                "description": "Home page",
+                "responses": {
+                    "200":{
+                        "description": "test OK",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                  "default-example": {
+                                    "value": "welcomme to Expert System"
+                                  }
+                                }
+                              }
+                        }
                     }
-                  ]
                 }
-              }
             }
-          },
-          "404": {
-            "description": "Paramètre de recherche manquant ou invalide.",
-            "content": {
-              "application/json": {
-                "example": {
-                  "error": "Le paramètre 'query' est requis et doit être valide."
+            
+        },
+       "/search":{
+            "get":{
+                "operationId": "search",
+                "summary": "Recherche de sujets",
+                "description":"Permet de rechercher un sujet par mot-clé.",
+                "parameters": [
+                    {
+                        "name": "query",
+                        "in": "query",
+                        "description": "Mot-clé à rechercher",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200":{
+                        "description": "Résultat de recherche.",
+                        "content": {
+                            "application/json":{
+                                "example": {
+                                    "results": {
+                                            "title": "voiture",
+                                            "description": "Nostrud ipsum dolore consequat id quis culpa. Aliquip excepteur magna elit laborum veniam amet. Deserunt in nostrud id magna aliqua eu irure consectetur consectetur sint. Sit cillum minim eiusmod quis in cupidatat ut duis qui tempor amet ut.",
+                                            "url": "https://www.autokoo.com/marque"
+                                        }
+
+                                    
+                                }
+                            }
+                        }
+                    }
                 }
-              }
+                
             }
-          }
-        }
-      }
+        
     }
-  }
+    
+    }
 }
