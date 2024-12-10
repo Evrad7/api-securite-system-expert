@@ -1,21 +1,20 @@
-{   
-
+{
     "servers": [
         {
             "url": "{protocol}://{host}:{port}",
             "variables": {
-                "protocol":{
+                "protocol": {
                     "enum": [
                         "http",
                         "https"
                     ],
                     "default": "http"
                 },
-                "host":{
+                "host": {
                     "default": "13.36.102.183",
                     "description": "adresse ip ou nom de domaine"
                 },
-                "port":{
+                "port": {
                     "default": "8080",
                     "description": "port de communication"
                 }
@@ -27,76 +26,103 @@
         "version": "1.0.0"
     },
     "openapi": "3.0.3",
-
     "x-tyk-api-gateway": {
-       "middleware": {
-        "operations": {
-            "home-page":{
-                "mockResponse":{
-                    "enabled":true,
-                    "fromOASExamples": {
-                        "enabled": true,
-                        "exampleName":"default-example"
-                      }
-                }
+        "middleware": {
+            "global": {
+                "cache": {
+                    "enabled": true,
+                    "timeout": 500
+                },
+              "cors": {
+                "enabled": true,
+                "allowedOrigins": ["*"]
+              }
             },
-            "search":{
-                "mockResponse":{
-                    "enabled":true,
-                    "fromOASExamples": {
-                        "enabled": true
-                      }
+            "operations": {
+                "home-page": {
+                    "rateLimit": {
+                        "enabled": true,
+                        "per": 60,
+                        "rate": 60
+                      },
+                      "requestSizeLimit": {
+                        "enabled": true,
+                        "value": 100
+                      },
+                    "mockResponse": {
+                        "enabled": true,
+                        "fromOASExamples": {
+                            "enabled": true,
+                            "exampleName": "default-example"
+                        }
+                    }
+                },
+                "search": {
+                    "rateLimit": {
+                        "enabled": true,
+                        "per": 60,
+                        "rate": 60
+                      },
+                      "requestSizeLimit": {
+                        "enabled": true,
+                        "value": 100
+                      },
+                    "cache": {
+                        "enabled": true,
+                        "cacheResponseCodes": [200]
+                    },
+                    "mockResponse": {
+                        "enabled": true,
+                        "fromOASExamples": {
+                            "enabled": true
+                        }
+                    }
+                    
                 }
             }
-        }
-       },
+        },
         "info": {
             "name": "expertSystem",
-             "state": {
+            "state": {
                 "active": true
-             }
-             
+            }
         },
         "upstream": {
             "url": "http://httpbin.org"
         },
         "server": {
             "listenPath": {
-                "value": "/ms2d5",
-                "strip": true
+                "value": "/"
             }
-      
         }
       
-    
     },
     "paths": {
-        "/":{
-            "get":{
+        "/": {
+            "get": {
                 "operationId": "home-page",
                 "description": "Home page",
                 "responses": {
-                    "200":{
+                    "200": {
                         "description": "test OK",
                         "content": {
                             "application/json": {
                                 "examples": {
-                                  "default-example": {
-                                    "value": "welcomme to Expert System"
-                                  }
+                                    "default-example": {
+                                        "value": "welcome to Expert System"
+                                    }
                                 }
-                              }
+                            }
                         }
                     }
                 }
             }
-            
         },
-       "/search":{
-            "get":{
+        "/search": {
+            "get": {
                 "operationId": "search",
                 "summary": "Recherche de sujets",
-                "description":"Permet de rechercher un sujet par mot-clé.",
+                "description": "Permet de rechercher un sujet par mot-clé.",
                 "parameters": [
                     {
                         "name": "query",
@@ -109,27 +135,26 @@
                     }
                 ],
                 "responses": {
-                    "200":{
+                    "200": {
                         "description": "Résultat de recherche.",
+                        "headers": {
+                          
+                        },
                         "content": {
-                            "application/json":{
+                            "application/json": {
                                 "example": {
                                     "results": {
-                                            "title": "voiture",
-                                            "description": "Nostrud ipsum dolore consequat id quis culpa. Aliquip excepteur magna elit laborum veniam amet. Deserunt in nostrud id magna aliqua eu irure consectetur consectetur sint. Sit cillum minim eiusmod quis in cupidatat ut duis qui tempor amet ut.",
-                                            "url": "https://www.autokoo.com/marque"
-                                        }
-
-                                    
+                                        "title": "voiture",
+                                        "description": "Nostrud ipsum dolore consequat id quis culpa. Aliquip excepteur magna elit laborum veniam amet. Deserunt in nostrud id magna aliqua eu irure consectetur consectetur sint. Sit cillum minim eiusmod quis in cupidatat ut duis qui tempor amet ut.",
+                                        "url": "https://www.autokoo.com/marque"
+                                    }
                                 }
                             }
                         }
                     }
                 }
-                
             }
-        
+        }
     }
     
-    }
 }
