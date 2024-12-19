@@ -5,19 +5,23 @@
             "Oauth2":{
                 "type": "oauth2",
                  "flows": {
+                  "implicit": {
+                      "authorizationUrl": "https://expert-system.hackquest.com/realms/Expert-System-Security/protocol/openid-connect/auth",
+                      "scopes": {
+                          "email":"email",
+                          "profile":"profile"
+                      }
+                    },
                     "authorizationCode": {
-                        "authorizationUrl": "https://accounts.google.com/o/oauth2/auth",
-                        "tokenUrl": "https://oauth2.googleapis.com/token",
+                        "authorizationUrl": "https://expert-system.hackquest.com/realms/Expert-System-Security/protocol/openid-connect/auth",
+                        "tokenUrl": "https://expert-system.hackquest.com/realms/Expert-System-Security/protocol/openid-connect/token",
                         "scopes": {
-                            "openid":"OpenId spec"
+                            "email":"email",
+                            "profile":"profile"
                         }
                     }
+                    
                  }
-            },
-            "BearerAuth":{
-                "type": "http",
-                "scheme": "bearer",
-                "bearerFormat": "JWT"
             }
         }
     },
@@ -33,8 +37,8 @@
                     "default": "http"
                 },
                 "host": {
-                    "default": "localhost",
-                    "description": "adresse ip ou nom de domaine"
+                    "default": "expert-system.hackquest.com",
+                    "description": "Nom de domaine"
                 },
                 "port": {
                     "default": "8080",
@@ -58,7 +62,7 @@
                 },
               "cors": {
                 "enabled": true,
-                "allowedOrigins": ["*", "127.0.0.1", "localhost"]
+                "allowedOrigins": ["*", "expert-system.hackquest.com", "127.0.0.1", "localhost"]
                 
               }
             },
@@ -135,8 +139,7 @@
                             "enabled": true,
                             "name": "Authorization"
                         },
-                        "allowedAuthorizeTypes": ["code"],
-                        "authLoginRedirect": "https://canva.com"
+                        "allowedAuthorizeTypes": ["code"]
                     }
                 }
             }
@@ -210,7 +213,7 @@
                     }
                 }
             }
-        },
+        }
   
     }
     
