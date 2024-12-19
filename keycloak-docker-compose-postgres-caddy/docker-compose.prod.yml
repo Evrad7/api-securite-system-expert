@@ -1,0 +1,19 @@
+version: '3.4'
+
+services:
+  caddy:
+    environment:
+      SERVER_NAME: ${SERVER_NAME}
+  keycloakdb:
+    environment:
+      POSTGRES_DDB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  keycloak:
+    command: start --optimized
+    environment:
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      KC_DB_USERNAME: ${POSTGRES_USER}
+      KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
+      KC_LOG_LEVEL: info

@@ -1,4 +1,30 @@
 {
+       
+    "components": {
+        "securitySchemes": {
+            "Oauth2":{
+                "type": "oauth2",
+                 "flows": {
+                  "implicit": {
+                      "authorizationUrl": "https://expert-system.hackquest.com/realms/Expert-System-Security/protocol/openid-connect/auth",
+                      "scopes": {
+                          "email":"email",
+                          "profile":"profile"
+                      }
+                    },
+                    "authorizationCode": {
+                        "authorizationUrl": "https://expert-system.hackquest.com/realms/Expert-System-Security/protocol/openid-connect/auth",
+                        "tokenUrl": "https://expert-system.hackquest.com/realms/Expert-System-Security/protocol/openid-connect/token",
+                        "scopes": {
+                            "email":"email",
+                            "profile":"profile"
+                        }
+                    }
+                    
+                 }
+            }
+        }
+    },
     "servers": [
         {
             "url": "{protocol}://{host}:{port}",
@@ -11,8 +37,8 @@
                     "default": "http"
                 },
                 "host": {
-                    "default": "13.36.102.183",
-                    "description": "adresse ip ou nom de domaine"
+                    "default": "expert-system.hackquest.com",
+                    "description": "Nom de domaine"
                 },
                 "port": {
                     "default": "8080",
@@ -20,7 +46,12 @@
                 }
             }
         }
+    
     ],
+    "authConfigs": {
+      "basic_auth": {
+        "enabled": true
+      },
     "info": {
         "title": "expert-system",
         "version": "1.0.0"
@@ -35,7 +66,8 @@
                 },
               "cors": {
                 "enabled": true,
-                "allowedOrigins": ["*"]
+                "allowedOrigins": ["*", "expert-system.hackquest.com", "127.0.0.1", "localhost"]
+                
               }
             },
             "operations": {
@@ -78,6 +110,14 @@
                         }
                     }
                     
+                },
+                "oauth2-redirect-uri":{
+                    "mockResponse": {
+                        "enabled": true,
+                        "fromOASExamples": {
+                            "enabled": true
+                        }
+                    }
                 }
             }
         },
@@ -93,10 +133,32 @@
         "server": {
             "listenPath": {
                 "value": "/"
+            },
+            "authentication": {
+                "enabled": false,
+                "securitySchemes": {
+                    "Oauth2":{
+                        "enabled": true,
+                        "header": {
+                            "enabled": true,
+                            "name": "Authorization"
+                        },
+                        "allowedAuthorizeTypes": ["code"]
+                    }
+                }
             }
+         
         }
       
     },
+    "security": [
+        {
+            "Oauth2":[
+                "openid"
+            ],
+            "BearerAuth":[]
+        }
+    ],
     "paths": {
         "/": {
             "get": {
@@ -115,7 +177,8 @@
                             }
                         }
                     }
-                }
+                },
+                "security": []
             }
         },
         "/search": {
@@ -155,6 +218,8 @@
                 }
             }
         }
+  
     }
     
-}
+  }
+  
