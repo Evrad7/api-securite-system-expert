@@ -1,4 +1,26 @@
 {
+       
+    "components": {
+        "securitySchemes": {
+            "Oauth2":{
+                "type": "oauth2",
+                 "flows": {
+                    "authorizationCode": {
+                        "authorizationUrl": "https://accounts.google.com/o/oauth2/auth",
+                        "tokenUrl": "https://oauth2.googleapis.com/token",
+                        "scopes": {
+                            "openid":"OpenId spec"
+                        }
+                    }
+                 }
+            },
+            "BearerAuth":{
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    },
     "servers": [
         {
             "url": "{protocol}://{host}:{port}",
@@ -11,7 +33,7 @@
                     "default": "http"
                 },
                 "host": {
-                    "default": "13.36.102.183",
+                    "default": "localhost",
                     "description": "adresse ip ou nom de domaine"
                 },
                 "port": {
@@ -20,6 +42,7 @@
                 }
             }
         }
+    
     ],
     "info": {
         "title": "expert-system",
@@ -35,7 +58,8 @@
                 },
               "cors": {
                 "enabled": true,
-                "allowedOrigins": ["*"]
+                "allowedOrigins": ["*", "127.0.0.1", "localhost"]
+                
               }
             },
             "operations": {
@@ -78,6 +102,14 @@
                         }
                     }
                     
+                },
+                "oauth2-redirect-uri":{
+                    "mockResponse": {
+                        "enabled": true,
+                        "fromOASExamples": {
+                            "enabled": true
+                        }
+                    }
                 }
             }
         },
@@ -93,10 +125,33 @@
         "server": {
             "listenPath": {
                 "value": "/"
+            },
+            "authentication": {
+                "enabled": false,
+                "securitySchemes": {
+                    "Oauth2":{
+                        "enabled": true,
+                        "header": {
+                            "enabled": true,
+                            "name": "Authorization"
+                        },
+                        "allowedAuthorizeTypes": ["code"],
+                        "authLoginRedirect": "https://canva.com"
+                    }
+                }
             }
+         
         }
       
     },
+    "security": [
+        {
+            "Oauth2":[
+                "openid"
+            ],
+            "BearerAuth":[]
+        }
+    ],
     "paths": {
         "/": {
             "get": {
@@ -115,7 +170,8 @@
                             }
                         }
                     }
-                }
+                },
+                "security": []
             }
         },
         "/search": {
@@ -154,7 +210,9 @@
                     }
                 }
             }
-        }
+        },
+  
     }
     
-}
+  }
+  
