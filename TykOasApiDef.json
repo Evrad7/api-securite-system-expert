@@ -48,6 +48,10 @@
         }
     
     ],
+    "authConfigs": {
+      "basic_auth": {
+        "enabled": true
+      },
     "info": {
         "title": "expert-system",
         "version": "1.0.0"
