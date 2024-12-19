@@ -1,102 +1,221 @@
 {
-  "servers": [
-    {
-      "url": "{protocol}://{host}:{port}",
-      "variables": {
-        "protocol": {
-          "enum": ["http", "https"],
-          "default": "http"
-        },
-        "host": {
-          "default": "13.36.102.183",
-          "description": "adresse ip ou nom de domaine"
-        },
-        "port": {
-          "default": "8080",
-          "description": "port de communication"
-        }
-      }
-    }
-  ],
-  "info": {
-    "title": "expert-system",
-    "version": "1.0.0",
-    "description": "API pour la recherche de sujets dans le systéme expert"
-  },
-  "openapi": "3.0.3",
-
-  "x-tyk-api-gateway": {
-    "info": {
-      "name": "expertSystem",
-      "state": {
-        "active": true
-      }
-    },
-    "upstream": {
-      "url": "http://httpbin.org"
-    },
-    "server": {
-      "listenPath": {
-        "value": "/ms2d5",
-        "strip": true
-      }
-    }
-  },
-  "paths": {
-    "/": {
-      "get": {
-        "description": "test of tyk architecture",
-        "responses": {
-          "200": {
-            "description": "test OK"
-          }
-        }
-      }
-    },
-    "/search": {
-      "get": {
-        "summary": "Recherche de sujets",
-        "description": "Permet de rechercher un sujet par mot-clé.",
-        "parameters": [
-          {
-            "name": "query",
-            "in": "query",
-            "description": "Mot-clé à rechercher",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Liste des résultats de recherche.",
-            "content": {
-              "application/json": {
-                "example": {
-                  "results": [
-                    {
-                      "title": "voiture",
-                      "description": "liste de voiture",
-                      "url": "https://www.autokoo.com/marque"
+       
+    "components": {
+        "securitySchemes": {
+            "Oauth2":{
+                "type": "oauth2",
+                 "flows": {
+                  "implicit": {
+                      "authorizationUrl": "https://expert-system.hackquest.com/realms/Expert-System-Security/protocol/openid-connect/auth",
+                      "scopes": {
+                          "email":"email",
+                          "profile":"profile"
+                      }
+                    },
+                    "authorizationCode": {
+                        "authorizationUrl": "https://expert-system.hackquest.com/realms/Expert-System-Security/protocol/openid-connect/auth",
+                        "tokenUrl": "https://expert-system.hackquest.com/realms/Expert-System-Security/protocol/openid-connect/token",
+                        "scopes": {
+                            "email":"email",
+                            "profile":"profile"
+                        }
                     }
-                  ]
-                }
-              }
+                    
+                 }
             }
-          },
-          "404": {
-            "description": "Paramètre de recherche manquant ou invalide.",
-            "content": {
-              "application/json": {
-                "example": {
-                  "error": "Le paramètre 'query' est requis et doit être valide."
-                }
-              }
-            }
-          }
         }
-      }
+    },
+    "servers": [
+        {
+            "url": "{protocol}://{host}:{port}",
+            "variables": {
+                "protocol": {
+                    "enum": [
+                        "http",
+                        "https"
+                    ],
+                    "default": "http"
+                },
+                "host": {
+                    "default": "expert-system.hackquest.com",
+                    "description": "Nom de domaine"
+                },
+                "port": {
+                    "default": "8080",
+                    "description": "port de communication"
+                }
+            }
+        }
+    
+    ],
+    "info": {
+        "title": "expert-system",
+        "version": "1.0.0"
+    },
+    "openapi": "3.0.3",
+    "x-tyk-api-gateway": {
+        "middleware": {
+            "global": {
+                "cache": {
+                    "enabled": true,
+                    "timeout": 500
+                },
+              "cors": {
+                "enabled": true,
+                "allowedOrigins": ["*", "expert-system.hackquest.com", "127.0.0.1", "localhost"]
+                
+              }
+            },
+            "operations": {
+                "home-page": {
+                    "rateLimit": {
+                        "enabled": true,
+                        "per": 60,
+                        "rate": 60
+                      },
+                      "requestSizeLimit": {
+                        "enabled": true,
+                        "value": 100
+                      },
+                    "mockResponse": {
+                        "enabled": true,
+                        "fromOASExamples": {
+                            "enabled": true,
+                            "exampleName": "default-example"
+                        }
+                    }
+                },
+                "search": {
+                    "rateLimit": {
+                        "enabled": true,
+                        "per": 60,
+                        "rate": 60
+                      },
+                      "requestSizeLimit": {
+                        "enabled": true,
+                        "value": 100
+                      },
+                    "cache": {
+                        "enabled": true,
+                        "cacheResponseCodes": [200]
+                    },
+                    "mockResponse": {
+                        "enabled": true,
+                        "fromOASExamples": {
+                            "enabled": true
+                        }
+                    }
+                    
+                },
+                "oauth2-redirect-uri":{
+                    "mockResponse": {
+                        "enabled": true,
+                        "fromOASExamples": {
+                            "enabled": true
+                        }
+                    }
+                }
+            }
+        },
+        "info": {
+            "name": "expertSystem",
+            "state": {
+                "active": true
+            }
+        },
+        "upstream": {
+            "url": "http://httpbin.org"
+        },
+        "server": {
+            "listenPath": {
+                "value": "/"
+            },
+            "authentication": {
+                "enabled": false,
+                "securitySchemes": {
+                    "Oauth2":{
+                        "enabled": true,
+                        "header": {
+                            "enabled": true,
+                            "name": "Authorization"
+                        },
+                        "allowedAuthorizeTypes": ["code"]
+                    }
+                }
+            }
+         
+        }
+      
+    },
+    "security": [
+        {
+            "Oauth2":[
+                "openid"
+            ],
+            "BearerAuth":[]
+        }
+    ],
+    "paths": {
+        "/": {
+            "get": {
+                "operationId": "home-page",
+                "description": "Home page",
+                "responses": {
+                    "200": {
+                        "description": "test OK",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "default-example": {
+                                        "value": "welcome to Expert System"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": []
+            }
+        },
+        "/search": {
+            "get": {
+                "operationId": "search",
+                "summary": "Recherche de sujets",
+                "description": "Permet de rechercher un sujet par mot-clé.",
+                "parameters": [
+                    {
+                        "name": "query",
+                        "in": "query",
+                        "description": "Mot-clé à rechercher",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Résultat de recherche.",
+                        "headers": {
+                          
+                        },
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "results": {
+                                        "title": "voiture",
+                                        "description": "Nostrud ipsum dolore consequat id quis culpa. Aliquip excepteur magna elit laborum veniam amet. Deserunt in nostrud id magna aliqua eu irure consectetur consectetur sint. Sit cillum minim eiusmod quis in cupidatat ut duis qui tempor amet ut.",
+                                        "url": "https://www.autokoo.com/marque"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+  
     }
+    
   }
-}
+  
